@@ -1,0 +1,14 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-net --unstable-kv --allow-env app.ts",
+    "build-config": "deno run --allow-read --allow-sys --allow-write ./blocks/build-config.ts"
+  },
+  "deploy": {
+    "project": "6c1a9778-8991-4515-ab99-af6e2b827b82",
+    "exclude": [
+      "**/node_modules"
+    ],
+    "include": [],
+    "entrypoint": "app.ts"
+  }
+}
