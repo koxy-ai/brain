@@ -3,7 +3,7 @@ import { Context, Hono } from "https://deno.land/x/hono@v3.12.9/mod.ts";
 import revokeToken from "./routes/revoke-token.ts";
 import tokenAuth from "./controllers/token-auth.ts";
 import koxyResponse from "./helpers/koxy-response.ts";
-import Koxy, { Result, map } from "./processor/main.ts";
+import Koxy, { map } from "./processor/main.ts";
 
 const app = new Hono();
 

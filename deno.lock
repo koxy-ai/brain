@@ -2,11 +2,23 @@
   "version": "3",
   "packages": {
     "specifiers": {
+      "npm:@deno/shim-deno": "npm:@deno/shim-deno@0.18.1",
       "npm:jsonwebtoken": "npm:jsonwebtoken@9.0.2",
       "npm:pino": "npm:pino@8.17.2",
       "npm:ts-morph": "npm:ts-morph@21.0.1"
     },
     "npm": {
+      "@deno/shim-deno-test@0.5.0": {
+        "integrity": "sha512-4nMhecpGlPi0cSzT67L+Tm+GOJqvuk8gqHBziqcUQOarnuIax1z96/gJHCSIz2Z0zhxE6Rzwb3IZXPtFh51j+w==",
+        "dependencies": {}
+      },
+      "@deno/shim-deno@0.18.1": {
+        "integrity": "sha512-wUwH+khMK3y3GtLKohgHQmscbANVbRyZgNC967jMPb0N3II5bJpHN3w/aDeAdTFU9qbduhyp6aKrpD6cZ8aUWg==",
+        "dependencies": {
+          "@deno/shim-deno-test": "@deno/shim-deno-test@0.5.0",
+          "which": "which@4.0.0"
+        }
+      },
       "@nodelib/fs.scandir@2.1.5": {
         "integrity": "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==",
         "dependencies": {
@@ -141,6 +153,10 @@
       },
       "is-number@7.0.0": {
         "integrity": "sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==",
+        "dependencies": {}
+      },
+      "isexe@3.1.1": {
+        "integrity": "sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==",
         "dependencies": {}
       },
       "jsonwebtoken@9.0.2": {
@@ -358,6 +374,12 @@
         "dependencies": {
           "@ts-morph/common": "@ts-morph/common@0.22.0",
           "code-block-writer": "code-block-writer@12.0.0"
+        }
+      },
+      "which@4.0.0": {
+        "integrity": "sha512-GlaYyEb07DPxYCKhKzplCWBJtvxZcZMrL+4UkrTSJHHPyZU4mYYTv3qaOe77H7EODLSSopAUFAc6W8U4yqvscg==",
+        "dependencies": {
+          "isexe": "isexe@3.1.1"
         }
       },
       "yallist@4.0.0": {
@@ -835,5 +857,12 @@
     "https://deno.land/x/oak_commons@0.5.0/server_sent_event.ts": "5c0b5b930bf39ea6742e408d9d47f6080637a1991188e10402d521181ee32286",
     "https://deno.land/x/oak_commons@0.5.0/status.ts": "f13e0e61c2aaf5e254ca528569b03896aee89d96ebc256fa740ea7305a68f53f",
     "https://deno.land/x/path_to_regexp@v6.2.1/index.ts": "894060567837bae8fc9c5cbd4d0a05e9024672083d5883b525c031eea940e556"
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:deno2node@1.11.0"
+      ]
+    }
   }
 }

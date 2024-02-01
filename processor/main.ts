@@ -43,7 +43,7 @@ const map: FlowMap = {
             }
         },
         next: {
-            success: "log5"
+            success: "log1"
         }
     },
 
