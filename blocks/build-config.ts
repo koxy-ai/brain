@@ -6,131 +6,123 @@ const start = Date.now();
 const allBlocks: string[] = [];
 
 const categories = [
-    "general"
-]
+  "general",
+];
 
 const sandbox = new Project({
-    useInMemoryFileSystem: true
+  useInMemoryFileSystem: true,
 });
 
 console.log("---\nStarted builder...");
 
-categories.map(category => {
-    const blocks = getAllBlocks(import.meta.dirname + `/${category}`);
-    allBlocks.push(...blocks);
-})
+categories.map((category) => {
+  const blocks = getAllBlocks(import.meta.dirname + `/${category}`);
+  allBlocks.push(...blocks);
+});
 
 function getAllBlocks(directoryPath: string): string[] {
-    const blocks: string[] = [];
+  const blocks: string[] = [];
 
-    for (const entry of walkSync(directoryPath, { includeFiles: false })) {
-        if (entry.isDirectory && entry.path !== directoryPath) {
-            blocks.push(entry.path);
-        }
+  for (const entry of walkSync(directoryPath, { includeFiles: false })) {
+    if (entry.isDirectory && entry.path !== directoryPath) {
+      blocks.push(entry.path);
     }
+  }
 
-    return blocks;
+  return blocks;
 }
 
-allBlocks.map(path => {
+allBlocks.map((path) => {
+  const config: Record<string, string | Record<string, unknown>[] | undefined> =
+    {};
 
-    const config: Record<string, string | Record<string, unknown>[] | undefined> = {};
+  const block = Deno.readTextFileSync(`/${path}/block.ts`);
+  const tsBlock = sandbox.createSourceFile(`${path}/block.ts`, block);
 
-    const block = Deno.readTextFileSync(`/${path}/block.ts`);
-    const tsBlock = sandbox.createSourceFile(`${path}/block.ts`, block);
-    
-    config.name = getVariable(tsBlock, "_name");
-    config.icon = getVariable(tsBlock, "_icon");
-    config.description = getVariable(tsBlock, "_description");
+  config.name = getVariable(tsBlock, "_name");
+  config.icon = getVariable(tsBlock, "_icon");
+  config.description = getVariable(tsBlock, "_description");
 
-    const pathSplitted = path.split("/");
-    const pathSplittedLength = pathSplitted.length;
-    const category = pathSplitted[pathSplittedLength - 2];
-    const method = pathSplitted[pathSplittedLength - 1];
-    config.source = category + "/" + method;
+  const pathSplitted = path.split("/");
+  const pathSplittedLength = pathSplitted.length;
+  const category = pathSplitted[pathSplittedLength - 2];
+  const method = pathSplitted[pathSplittedLength - 1];
+  config.source = category + "/" + method;
 
-    const params = getParams(tsBlock);
-    params.forEach(param => {
-        const uiOptions = GetUiOptions(tsBlock, param.name);
-        if (uiOptions) {
-            params[params.indexOf(param)].ui = uiOptions;
-        }
-    })
+  const params = getParams(tsBlock);
+  params.forEach((param) => {
+    const uiOptions = GetUiOptions(tsBlock, param.name);
+    if (uiOptions) {
+      params[params.indexOf(param)].ui = uiOptions;
+    }
+  });
 
-    config.params = params;
+  config.params = params;
 
-    const returnType = getReturnType(tsBlock) || "unknown";
-    config.returnType = returnType;
+  const returnType = getReturnType(tsBlock) || "unknown";
+  config.returnType = returnType;
 
-    Deno.writeTextFileSync(`${path}/config.json`, JSON.stringify(config));
+  Deno.writeTextFileSync(`${path}/config.json`, JSON.stringify(config));
 
-    console.log("\x1b[32m+\x1b[0m Built config for", config.name);
-
-})
+  console.log("\x1b[32m+\x1b[0m Built config for", config.name);
+});
 
 function GetUiOptions(file: SourceFile, param: string) {
+  const value = file.getVariableDeclaration(`_param_${param}_ui`);
 
-    const value = file.getVariableDeclaration(`_param_${param}_ui`);
+  if (!value) {
+    return null;
+  }
 
-    if (!value) {
-        return null;
-    }
-
-    return JSON.parse(value.getInitializer()?.getText() || "{}");
-
+  return JSON.parse(value.getInitializer()?.getText() || "{}");
 }
 
 function getVariable(file: SourceFile, variable: string) {
+  let value = file.getVariableDeclaration(variable)?.getInitializer()
+    ?.getText();
+  while (value?.includes('"')) {
+    value = value.replace('"', "");
+  }
 
-    let value = file.getVariableDeclaration(variable)?.getInitializer()?.getText();
-    while (value?.includes("\"")) {
-        value = value.replace("\"", "");
-    }
-
-    return value;
-
+  return value;
 }
 
 function getReturnType(file: SourceFile) {
+  const funcs = file.getFunctions();
+  const exports = funcs.filter((func) => func.isDefaultExport());
 
-    const funcs = file.getFunctions();
-    const exports = funcs.filter(func => func.isDefaultExport());
+  if (exports.length < 1) {
+    return null;
+  }
 
-    if (exports.length < 1) {
-        return null;
-    }
-
-    return exports[0].getReturnType().getText();
-
+  return exports[0].getReturnType().getText();
 }
 
 function getParams(file: SourceFile) {
+  const res: { name: string; type: unknown; ui?: unknown }[] = [];
 
-    const res: {name: string, type: unknown, ui?: unknown}[] = [];
-
-    const paramsType = file.getTypeAlias("Params");
-    if (!paramsType) {
-        return res;
-    }
-
-    const paramsTypeNode = paramsType.getType();
-    if (!paramsTypeNode) {
-        return res;
-    }
-
-    const properties = paramsTypeNode.getProperties();
-
-    properties.forEach(property => {
-        const name = property.getName();
-        const type = property.getValueDeclaration()?.getType()?.getText();
-        if (!name || !type) {
-            return;
-        }
-        res.push({ name, type });
-    });
-
+  const paramsType = file.getTypeAlias("Params");
+  if (!paramsType) {
     return res;
+  }
 
+  const paramsTypeNode = paramsType.getType();
+  if (!paramsTypeNode) {
+    return res;
+  }
+
+  const properties = paramsTypeNode.getProperties();
+
+  properties.forEach((property) => {
+    const name = property.getName();
+    const type = property.getValueDeclaration()?.getType()?.getText();
+    if (!name || !type) {
+      return;
+    }
+    res.push({ name, type });
+  });
+
+  return res;
 }
 
 console.log("\n---\nDone in:", Date.now() - start, "ms");

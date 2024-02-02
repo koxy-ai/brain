@@ -1,11 +1,8 @@
-
 type Params = {
-    position: string,
-    err: string
-}
+  position: string;
+  err: string;
+};
 
 export default function error({ position, err }: Params) {
-
-    throw new Error(err);
-
+  throw new Error(err);
 }

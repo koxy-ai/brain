@@ -10,27 +10,23 @@ router.post("/revoke-token", revokeToken);
 router.post("/flow", tokenAuth, updateFlow);
 
 router.get("/", ({ response }) => {
-
-    return koxyResponse(response, {
-        status: 200,
-        success: true,
-        body: {
-            msg: "This is Koxy AI brain.!"
-        }
-    })
-
-})
+  return koxyResponse(response, {
+    status: 200,
+    success: true,
+    body: {
+      msg: "This is Koxy AI brain.!",
+    },
+  });
+});
 
 router.post("/", tokenAuth, ({ response }) => {
-
-    return koxyResponse(response, {
-        status: 200,
-        success: true,
-        body: {
-            msg: "Welcome"
-        }
-    })
-
-})
+  return koxyResponse(response, {
+    status: 200,
+    success: true,
+    body: {
+      msg: "Welcome",
+    },
+  });
+});
 
 export default router;

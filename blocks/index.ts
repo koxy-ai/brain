@@ -1,3 +1,3 @@
 export default {
-    logger: "basics/logger"
-}
+  logger: "basics/logger",
+};

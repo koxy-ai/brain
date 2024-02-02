@@ -1,12 +1,11 @@
-
 export interface SuccessReturn {
-    success: true,
-    result?: unknown
+  success: true;
+  result?: unknown;
 }
 
 export interface FailedReturn {
-    success: false,
-    err?: string
+  success: false;
+  err?: string;
 }
 
 type BlockReturn = SuccessReturn | FailedReturn;

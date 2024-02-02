@@ -6,51 +6,53 @@ import bearerToken from "../helpers/bearerToken.ts";
 
 const validTokens = new Set<string>();
 
-export default async function tokenAuth(c: Context, next: () => Promise<unknown>) {
+export default async function tokenAuth(
+  c: Context,
+  next: () => Promise<unknown>,
+) {
+  const authorization = c.req.header("Authorization") ||
+    c.req.header("authorization");
 
-    const authorization = c.req.header("Authorization") || c.req.header("authorization");
+  // Return if headers are not in place
+  if (!authorization) {
+    return koxyResponse(c, {
+      status: 401,
+      success: false,
+      body: {
+        msg: "No authorization token provided.",
+      },
+    });
+  }
 
-    // Return if headers are not in place
-    if (!authorization) {
-        return koxyResponse(c, {
-            status: 401,
-            success: false,
-            body: {
-                msg: "No authorization token provided."
-            }
-        })
-    }
+  const token = bearerToken(authorization);
+  const verification = (validTokens.has(token)) ? true : verifyToken(token);
 
-    const token = bearerToken(authorization);
-    const verification = (validTokens.has(token)) ? true : verifyToken(token);
+  // Return if token is invalid
+  if (!verification) {
+    return koxyResponse(c, {
+      status: 401,
+      success: false,
+      body: {
+        msg: "Token is invalid.",
+      },
+    });
+  }
 
-    // Return if token is invalid
-    if (!verification) {
-        return koxyResponse(c, {
-            status: 401,
-            success: false,
-            body: {
-                msg: "Token is invalid."
-            }
-        })
-    }
+  // add token to valid tokens
+  validTokens.add(token);
+  const isRevoked = await checkRevokedToken(verification.id, token);
 
-    // add token to valid tokens
-    validTokens.add(token);
-    const isRevoked = await checkRevokedToken(verification.id, token);
+  // Return if the token has been revoked
+  if (isRevoked) {
+    validTokens.delete(token);
+    return koxyResponse(c, {
+      status: 401,
+      success: false,
+      body: {
+        msg: "Token has been revoked.",
+      },
+    });
+  }
 
-    // Return if the token has been revoked
-    if (isRevoked) {
-        validTokens.delete(token);
-        return koxyResponse(c, {
-            status: 401,
-            success: false,
-            body: {
-                msg: "Token has been revoked."
-            }
-        })
-    }
-
-    await next();
-
+  await next();
 }

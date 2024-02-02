@@ -10,5 +10,9 @@
     ],
     "include": [],
     "entrypoint": "app.ts"
+  },
+  "imports": {
+    "sharp": "npm:sharp",
+    "@xenova/transformers": "npm:@xenova/transformers"
   }
 }

@@ -1,1 +1,8 @@
-{"name":"Logger","icon":"list","description":"Log something to the console","source":"general/logger","params":[{"name":"value","type":"unknown"}],"returnType":"BlockReturn"}
+{
+  "name": "Logger",
+  "icon": "list",
+  "description": "Log something to the console",
+  "source": "general/logger",
+  "params": [{ "name": "value", "type": "unknown" }],
+  "returnType": "BlockReturn"
+}

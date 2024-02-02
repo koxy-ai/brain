@@ -1,1 +1,12 @@
-{"name":"Add variable","icon":"text","description":"Add a global variable","source":"general/addVariable","params":[{"name":"key","type":"string","ui":{"field":"input"}},{"name":"value","type":"unknown"},{"name":"mutable","type":"boolean"}],"returnType":"BlockReturn"}
+{
+  "name": "Add variable",
+  "icon": "text",
+  "description": "Add a global variable",
+  "source": "general/addVariable",
+  "params": [
+    { "name": "key", "type": "string", "ui": { "field": "input" } },
+    { "name": "value", "type": "unknown" },
+    { "name": "mutable", "type": "boolean" }
+  ],
+  "returnType": "BlockReturn"
+}

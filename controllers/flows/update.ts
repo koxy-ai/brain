@@ -2,26 +2,24 @@ import db from "../../db/init.ts";
 import jwt from "npm:jsonwebtoken";
 
 type Params = {
-    newFlow: string,
-    id: string,
-    workspaceId: string
-}
+  newFlow: string;
+  id: string;
+  workspaceId: string;
+};
 
 export default async function updateFlow(params: Params) {
+  const { newFlow, id, workspaceId } = params;
 
-    const { newFlow, id, workspaceId } = params;
+  if (!newFlow || !id || !workspaceId) {
+    return false;
+  }
 
-    if (!newFlow || !id || !workspaceId) {
-        return false;
-    }
+  try {
+    const secret = Deno.env.get("SECRET_KEY");
+    const encrypted = jwt.sign(JSON.parse(newFlow), secret);
 
-    try {
-        const secret = Deno.env.get("SECRET_KEY");
-        const encrypted = jwt.sign(JSON.parse(newFlow), secret);
-
-        await db.set([workspaceId, "flows", id], encrypted);
-    } catch(_err: unknown) {
-        return false;
-    }
-
+    await db.set([workspaceId, "flows", id], encrypted);
+  } catch (_err: unknown) {
+    return false;
+  }
 }
