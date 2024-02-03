@@ -13,11 +13,16 @@ export default async function getFlow(options: Options) {
     return null;
   }
 
-  const value = await db.get([workspaceId, "flows", id]);
+  const data = await db.get([workspaceId, "flows", id]);
+  const value = data.value as any;
 
-  if (!value || typeof value !== "string") {
+  if (!value) {
     return null;
   }
 
-  return verifyToken(value);
+  try {
+    return verifyToken(value?.flow);
+  } catch (_err: unknown) {
+    return null;
+  }
 }

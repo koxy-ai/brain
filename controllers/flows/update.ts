@@ -18,7 +18,9 @@ export default async function updateFlow(params: Params) {
     const secret = Deno.env.get("SECRET_KEY");
     const encrypted = jwt.sign(JSON.parse(newFlow), secret);
 
-    await db.set([workspaceId, "flows", id], encrypted);
+    await db.set([workspaceId, "flows", id], {
+      flow: encrypted,
+    });
   } catch (_err: unknown) {
     return false;
   }

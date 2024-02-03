@@ -2,7 +2,7 @@ import Koxy from "../../../processor/main.ts";
 import ParamUiOptions from "../../../types/param-ui.ts";
 
 type Params = {
-  value: unknown[];
+  value: string[] | number[];
   joinOn: string;
 };
 
@@ -18,24 +18,22 @@ const _param_value_ui: ParamUiOptions = {
 
 const _param_splitOn_ui: ParamUiOptions = {
   "placeholder": "Enter delimiter...",
-}; 
+};
 
-export default async function parseJSON(
+export default async function arrayToText(
   { value, joinOn }: Params,
   window: Koxy,
 ) {
-
   try {
-    value = value.join(joinOn);
-    await processResult({
+    const newValue = value.join(joinOn);
+    await window.processResult({
       success: true,
-      result: value,
+      result: newValue,
     });
   } catch (_err: unknown) {
-    await processResult({
+    await window.processResult({
       success: false,
-      err: _err,
+      err: _err as string,
     });
   }
-  
 }

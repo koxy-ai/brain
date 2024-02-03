@@ -18,23 +18,22 @@ const _param_value_ui: ParamUiOptions = {
 
 const _param_splitOn_ui: ParamUiOptions = {
   "placeholder": "Enter delimiter...",
-}; 
+};
 
-export default async function parseJSON(
+export default async function textToArray(
   { value, splitOn }: Params,
   window: Koxy,
 ) {
-
   try {
-    value = value.split(splitOn);
-    await processResult({
+    const arr = value.split(splitOn);
+    await window.processResult({
       success: true,
-      result: value,
+      result: arr,
     });
   } catch (_err: unknown) {
-    await processResult({
+    await window.processResult({
       success: false,
-      err: _err,
+      err: _err as string,
     });
   }
 }

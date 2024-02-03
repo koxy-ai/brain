@@ -1,1 +1,20 @@
-{"name":"Text to array","icon":"brackets","description":"Make array from text","hasResult":true,"result":"array","source":"general/textToArray","params":[{"name":"value","type":"string","ui":{"placeholder":"Enter text to make array..."}},{"name":"splitOn","type":"string","ui":{"placeholder":"Enter delimiter..."}}]}
+{
+  "name": "Text to array",
+  "icon": "brackets",
+  "description": "Make array from text",
+  "hasResult": true,
+  "result": "array",
+  "source": "general/textToArray",
+  "params": [
+    {
+      "name": "value",
+      "type": "string",
+      "ui": { "placeholder": "Enter text to make array..." }
+    },
+    {
+      "name": "splitOn",
+      "type": "string",
+      "ui": { "placeholder": "Enter delimiter..." }
+    }
+  ]
+}

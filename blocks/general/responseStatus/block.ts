@@ -19,12 +19,14 @@ export default async function responseStatus(
   { code }: Params,
   window: Koxy,
 ) {
-  code = parseInt(code);
+  if (typeof code !== "number") {
+    code = parseInt(code);
+  }
 
   if (isNaN(code)) {
     await window.processResult({
       success: false,
-      error: "Invalid status code",
+      err: "Invalid status code",
     });
     return;
   }

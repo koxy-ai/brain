@@ -29,14 +29,14 @@ export default async function parseJSON(
 
   try {
     value = JSON.parse(value as string);
-    await processResult({
+    await window.processResult({
       success: true,
       result: value,
     });
   } catch (_err: unknown) {
-    await processResult({
+    await window.processResult({
       success: false,
-      err: _err,
+      err: _err as string,
     });
   }
 }

@@ -1,1 +1,8 @@
-{"name":"Logger","icon":"list","description":"Log something to the console","hasResult":false,"source":"general/logger","params":[{"name":"value","type":"unknown"}]}
+{
+  "name": "Logger",
+  "icon": "list",
+  "description": "Log something to the console",
+  "hasResult": false,
+  "source": "general/logger",
+  "params": [{ "name": "value", "type": "unknown" }]
+}

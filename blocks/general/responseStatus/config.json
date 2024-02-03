@@ -1,1 +1,14 @@
-{"name":"Response status","icon":"text","description":"Change the response status code.","hasResult":false,"source":"general/responseStatus","params":[{"name":"code","type":"number","ui":{"type":"number","placeholder":"Enter status code..."}}]}
+{
+  "name": "Response status",
+  "icon": "text",
+  "description": "Change the response status code.",
+  "hasResult": false,
+  "source": "general/responseStatus",
+  "params": [
+    {
+      "name": "code",
+      "type": "number",
+      "ui": { "type": "number", "placeholder": "Enter status code..." }
+    }
+  ]
+}

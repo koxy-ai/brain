@@ -95,7 +95,7 @@ function GetUiOptions(file: SourceFile, param: string) {
 function getVariable(file: SourceFile, variable: string) {
   let value = file.getVariableDeclaration(variable)?.getInitializer()
     ?.getText();
-    if (!value) {
+  if (!value) {
     return null;
   }
   while (value?.includes('"')) {
