@@ -5,14 +5,12 @@
   },
   "deploy": {
     "project": "6c1a9778-8991-4515-ab99-af6e2b827b82",
-    "exclude": [
-      "**/node_modules"
-    ],
+    "exclude": ["**/node_modules"],
     "include": [],
     "entrypoint": "app.ts"
   },
   "imports": {
-    "sharp": "npm:sharp",
+    "hono": "https://deno.land/x/hono@v3.12.9/mod.ts",
     "@xenova/transformers": "npm:@xenova/transformers"
   }
 }

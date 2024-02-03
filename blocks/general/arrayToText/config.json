@@ -1,0 +1,1 @@
+{"name":"Array to text","icon":"list","description":"Join array to text","hasResult":true,"result":"string","source":"general/arrayToText","params":[{"name":"value","type":"unknown[]","ui":{"placeholder":"Enter array..."}},{"name":"joinOn","type":"string"}]}

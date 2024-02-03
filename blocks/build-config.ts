@@ -42,6 +42,8 @@ allBlocks.map((path) => {
   config.name = getVariable(tsBlock, "_name");
   config.icon = getVariable(tsBlock, "_icon");
   config.description = getVariable(tsBlock, "_description");
+  config.hasResult = getVariable(tsBlock, "_hasResult") ? true : false;
+  (config.hasResult) ? config.result = getVariable(tsBlock, "_result") : null;
 
   const pathSplitted = path.split("/");
   const pathSplittedLength = pathSplitted.length;
@@ -59,27 +61,43 @@ allBlocks.map((path) => {
 
   config.params = params;
 
-  const returnType = getReturnType(tsBlock) || "unknown";
-  config.returnType = returnType;
-
   Deno.writeTextFileSync(`${path}/config.json`, JSON.stringify(config));
 
   console.log("\x1b[32m+\x1b[0m Built config for", config.name);
 });
 
 function GetUiOptions(file: SourceFile, param: string) {
-  const value = file.getVariableDeclaration(`_param_${param}_ui`);
+  const ui = file.getVariableDeclaration(`_param_${param}_ui`);
+
+  if (!ui) {
+    return null;
+  }
+
+  let value = ui.getInitializer()?.getText();
 
   if (!value) {
     return null;
   }
 
-  return JSON.parse(value.getInitializer()?.getText() || "{}");
+  // remove all new lines and replace { and }
+  const parsed = value.replace(/\n/g, "").replace(/[{]/g, "").replace(
+    /[}]/g,
+    "",
+  );
+
+  if (parsed.endsWith(",")) {
+    value = parsed.slice(0, -1);
+  }
+
+  return JSON.parse(`{${value}}` || "{}");
 }
 
 function getVariable(file: SourceFile, variable: string) {
   let value = file.getVariableDeclaration(variable)?.getInitializer()
     ?.getText();
+    if (!value) {
+    return null;
+  }
   while (value?.includes('"')) {
     value = value.replace('"', "");
   }
