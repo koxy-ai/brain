@@ -1,15 +1,1 @@
-{
-  "name": "Parse JSON",
-  "icon": "code-dots",
-  "description": "Parse data to JSON",
-  "hasResult": true,
-  "result": "object",
-  "source": "general/parseJSON",
-  "params": [
-    {
-      "name": "value",
-      "type": "unknown",
-      "ui": { "placeholder": "Enter value to parse..." }
-    }
-  ]
-}
+{"name":"Parse JSON","icon":"code-dots","description":"Parse data to JSON","hasResult":true,"result":"\"object\"","source":"general/parseJSON","params":[{"name":"value","type":"unknown","ui":{"placeholder":"Enter value to parse..."}}]}

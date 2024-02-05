@@ -1,9 +1,11 @@
 import { Project, SourceFile } from "npm:ts-morph";
 import { walkSync } from "https://deno.land/std@0.213.0/fs/mod.ts";
 
-const start = Date.now();
+type Config = Record<string, string | Record<string, unknown>[] | undefined | boolean>
 
+const start = Date.now();
 const allBlocks: string[] = [];
+const globalConf: Config[] = [];
 
 const categories = [
   "general",
@@ -33,7 +35,7 @@ function getAllBlocks(directoryPath: string): string[] {
 }
 
 allBlocks.map((path) => {
-  const config: Record<string, string | Record<string, unknown>[] | undefined> =
+  const config: Record<string, string | Record<string, unknown>[] | undefined | boolean> =
     {};
 
   const block = Deno.readTextFileSync(`/${path}/block.ts`);
@@ -61,10 +63,14 @@ allBlocks.map((path) => {
 
   config.params = params;
 
+  globalConf.push(config);
   Deno.writeTextFileSync(`${path}/config.json`, JSON.stringify(config));
 
   console.log("\x1b[32m+\x1b[0m Built config for", config.name);
 });
+
+console.log("\x1b[32m+\x1b[0m Writing global config...");
+Deno.writeTextFileSync(import.meta.dirname + "/config.json", JSON.stringify(globalConf));
 
 function GetUiOptions(file: SourceFile, param: string) {
   const ui = file.getVariableDeclaration(`_param_${param}_ui`);
@@ -96,24 +102,13 @@ function getVariable(file: SourceFile, variable: string) {
   let value = file.getVariableDeclaration(variable)?.getInitializer()
     ?.getText();
   if (!value) {
-    return null;
+    return undefined;
   }
-  while (value?.includes('"')) {
+  while (variable !== "_result" && value?.includes('"')) {
     value = value.replace('"', "");
   }
 
   return value;
-}
-
-function getReturnType(file: SourceFile) {
-  const funcs = file.getFunctions();
-  const exports = funcs.filter((func) => func.isDefaultExport());
-
-  if (exports.length < 1) {
-    return null;
-  }
-
-  return exports[0].getReturnType().getText();
 }
 
 function getParams(file: SourceFile) {

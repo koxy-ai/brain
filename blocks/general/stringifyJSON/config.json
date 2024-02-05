@@ -1,15 +1,1 @@
-{
-  "name": "Stringify JSON",
-  "icon": "code-minus",
-  "description": "Stringify JSON to string",
-  "hasResult": true,
-  "result": "string",
-  "source": "general/stringifyJSON",
-  "params": [
-    {
-      "name": "value",
-      "type": "object",
-      "ui": { "placeholder": "Enter value to Stringify..." }
-    }
-  ]
-}
+{"name":"Stringify JSON","icon":"code-minus","description":"Stringify JSON to string","hasResult":true,"result":"\"string\"","source":"general/stringifyJSON","params":[{"name":"value","type":"object","ui":{"placeholder":"Enter value to Stringify..."}}]}
