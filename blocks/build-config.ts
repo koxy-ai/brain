@@ -1,11 +1,15 @@
 import { Project, SourceFile } from "npm:ts-morph";
 import { walkSync } from "https://deno.land/std@0.213.0/fs/mod.ts";
 
-type Config = Record<string, string | Record<string, unknown>[] | undefined | boolean>
+type Config = Record<
+  string,
+  string | Record<string, unknown>[] | undefined | boolean
+>;
 
 const start = Date.now();
 const allBlocks: string[] = [];
 const globalConf: Config[] = [];
+const blocksCode: Record<string, string> = {};
 
 const categories = [
   "general",
@@ -35,10 +39,17 @@ function getAllBlocks(directoryPath: string): string[] {
 }
 
 allBlocks.map((path) => {
-  const config: Record<string, string | Record<string, unknown>[] | undefined | boolean> =
-    {};
+  const config: Record<
+    string,
+    string | Record<string, unknown>[] | undefined | boolean
+  > = {};
 
   const block = Deno.readTextFileSync(`/${path}/block.ts`);
+  const shortPath = path.substring(
+    (import.meta.dirname?.length || 0) + 1,
+    path.length,
+  );
+  blocksCode[shortPath] = block;
   const tsBlock = sandbox.createSourceFile(`${path}/block.ts`, block);
 
   config.name = getVariable(tsBlock, "_name");
@@ -69,8 +80,17 @@ allBlocks.map((path) => {
   console.log("\x1b[32m+\x1b[0m Built config for", config.name);
 });
 
-console.log("\x1b[32m+\x1b[0m Writing global config...");
-Deno.writeTextFileSync(import.meta.dirname + "/config.json", JSON.stringify(globalConf));
+console.log("\n\x1b[32m+\x1b[0m Writing global config...");
+Deno.writeTextFileSync(
+  import.meta.dirname + "/config.json",
+  JSON.stringify(globalConf),
+);
+
+console.log("\x1b[32m+\x1b[0m Writing global blocks index...");
+Deno.writeTextFileSync(
+  import.meta.dirname + "/blocks.json",
+  JSON.stringify(blocksCode),
+);
 
 function GetUiOptions(file: SourceFile, param: string) {
   const ui = file.getVariableDeclaration(`_param_${param}_ui`);

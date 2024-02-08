@@ -21,12 +21,12 @@ export default async function parseJSON(
 ) {
   try {
     const stringValue = JSON.stringify(value);
-    await window.processResult({
+    await window.processResult(window, {
       success: true,
       result: stringValue,
     });
   } catch (_err: unknown) {
-    await window.processResult({
+    await window.processResult(window, {
       success: false,
       err: _err as string,
     });

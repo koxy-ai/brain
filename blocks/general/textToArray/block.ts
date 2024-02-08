@@ -26,12 +26,12 @@ export default async function textToArray(
 ) {
   try {
     const arr = value.split(splitOn);
-    await window.processResult({
+    await window.processResult(window, {
       success: true,
       result: arr,
     });
   } catch (_err: unknown) {
-    await window.processResult({
+    await window.processResult(window, {
       success: false,
       err: _err as string,
     });

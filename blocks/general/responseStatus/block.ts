@@ -24,7 +24,7 @@ export default async function responseStatus(
   }
 
   if (isNaN(code)) {
-    await window.processResult({
+    await window.processResult(window, {
       success: false,
       err: "Invalid status code",
     });
@@ -32,7 +32,7 @@ export default async function responseStatus(
   }
 
   window.status = code;
-  await window.processResult({
+  await window.processResult(window, {
     success: true,
   });
 }

@@ -6,11 +6,10 @@ import Block from "../types/block.ts";
 import Pointer from "../types/pointer.ts";
 import Condition from "../types/condition.ts";
 import general from "../blocks/general/index.ts";
-import BlockReturn, {
-  FailedReturn,
-  SuccessReturn,
-} from "../types/block-return.ts";
 import FlowMap from "../types/map.ts";
+import processResult from "./results/process.ts";
+import processSuccess from "./results/success.ts";
+import processFailure from "./results/fail.ts";
 
 interface Result {
   status: number;
@@ -43,6 +42,10 @@ const map: FlowMap = {
         value: `{"date": "Koxy.env(VARIABLE)"}`,
         type: "object",
       },
+      mutable: {
+        value: "true",
+        type: "boolean"
+      }
     },
     next: {
       success: "log1",
@@ -97,15 +100,19 @@ const map: FlowMap = {
 class Koxy {
   private map: FlowMap;
   private env: Record<string, unknown> = { VARIABLE: "3" };
-  public variables = new Map<string, { value: unknown; mutable: boolean }>();
+  public variables = new Map<string, { value: unknown; mutable: boolean; type: string }>();
   private startAt: number;
 
-  private results = new Map<string, unknown>();
+  public results = new Map<string, unknown>();
   private errors: { position: string; err: string }[] = [];
 
   public prevPosition: string;
   public position: string;
   public next: { success?: string; failed?: string } = {};
+
+  public processResult = processResult;
+  public processSuccess = processSuccess;
+  public processFailure = processFailure;
 
   public stopReason: "complete" | "error" = "error";
   public status = 200;
@@ -156,7 +163,7 @@ class Koxy {
     }
 
     if (block.type === "pointer") {
-      return this.process.pointer(block);
+      return await this.process.pointer(block);
     }
 
     if (block.type === "condition") {
@@ -183,54 +190,6 @@ class Koxy {
       await action(this.inputs.process(inputs), this);
     },
   };
-
-  async processResult(res: BlockReturn) {
-    const next = this.next;
-
-    if (!res) {
-      return this.throwError({ err: "source return is invalid", stop: true });
-    }
-
-    if (next?.success === this.position || next?.failed === this.position) {
-      return this.throwError({
-        err: "Loop detected: A block can't point to itself",
-        stop: true,
-      });
-    }
-
-    if (res.success === false) {
-      await this.processFailure(res, next?.failed);
-      return;
-    }
-
-    await this.processSuccess(res, next?.success);
-  }
-
-  async processSuccess(res: SuccessReturn, next: string | undefined) {
-    if (res.result) {
-      this.results.set(this.position, res);
-    }
-
-    if (next) {
-      await this.controller(next);
-      return;
-    }
-
-    this.stop();
-    return;
-  }
-
-  async processFailure(res: FailedReturn, next: string | undefined) {
-    if (next) {
-      await this.controller(next);
-      return;
-    }
-
-    this.throwError({ err: res.err || "Unexpected error" });
-
-    this.stop();
-    return;
-  }
 
   // deno-lint-ignore ban-types
   getSource(source: string): null | Function {
@@ -316,6 +275,11 @@ class Koxy {
     return null;
   }
 }
+
+const koxy = new Koxy(map);
+koxy.start().then((res) => {
+  console.log(res);
+})
 
 export { map, type Result };
 export default Koxy;

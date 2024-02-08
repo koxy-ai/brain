@@ -29,7 +29,7 @@ export default async function addVariable(
 ) {
   const exist = window.variables.get(key) || { mutable: true };
   if (!exist.mutable) {
-    await window.processResult({
+    await window.processResult(window, {
       success: false,
       err: `Can not mutate the immutable variable "${key}"`,
     });
@@ -47,7 +47,7 @@ export default async function addVariable(
     mutable: mutable || false,
   });
 
-  await window.processResult({
+  await window.processResult(window, {
     success: true,
   });
 }

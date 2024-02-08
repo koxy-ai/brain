@@ -20,7 +20,7 @@ export default async function parseJSON(
   window: Koxy,
 ) {
   if (typeof value === "object") {
-    await window.processResult({
+    await window.processResult(window, {
       success: true,
       result: value,
     });
@@ -29,12 +29,12 @@ export default async function parseJSON(
 
   try {
     value = JSON.parse(value as string);
-    await window.processResult({
+    await window.processResult(window, {
       success: true,
       result: value,
     });
   } catch (_err: unknown) {
-    await window.processResult({
+    await window.processResult(window, {
       success: false,
       err: _err as string,
     });

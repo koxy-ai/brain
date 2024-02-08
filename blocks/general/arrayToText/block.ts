@@ -26,12 +26,12 @@ export default async function arrayToText(
 ) {
   try {
     const newValue = value.join(joinOn);
-    await window.processResult({
+    await window.processResult(window, {
       success: true,
       result: newValue,
     });
   } catch (_err: unknown) {
-    await window.processResult({
+    await window.processResult(window, {
       success: false,
       err: _err as string,
     });
