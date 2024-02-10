@@ -3,12 +3,17 @@
   "packages": {
     "specifiers": {
       "npm:@deno/shim-deno": "npm:@deno/shim-deno@0.18.1",
+      "npm:@types/node": "npm:@types/node@18.16.19",
       "npm:@xenova/transformers": "npm:@xenova/transformers@2.14.2",
+      "npm:crypto": "npm:crypto@1.0.1",
+      "npm:json-logic-js": "npm:json-logic-js@2.0.2",
       "npm:jsonwebtoken": "npm:jsonwebtoken@9.0.2",
       "npm:minhash": "npm:minhash@0.0.9",
       "npm:ml-pca": "npm:ml-pca@4.1.1",
       "npm:pino": "npm:pino@8.17.2",
-      "npm:ts-morph": "npm:ts-morph@21.0.1"
+      "npm:ts-morph": "npm:ts-morph@21.0.1",
+      "npm:uuid": "npm:uuid@9.0.1",
+      "npm:uuidv4": "npm:uuidv4@6.2.13"
     },
     "npm": {
       "@deno/shim-deno-test@0.5.0": {
@@ -100,11 +105,19 @@
         "integrity": "sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==",
         "dependencies": {}
       },
+      "@types/node@18.16.19": {
+        "integrity": "sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==",
+        "dependencies": {}
+      },
       "@types/node@20.11.6": {
         "integrity": "sha512-+EOokTnksGVgip2PbYbr3xnR7kZigh4LbybAfBAw5BpnQ+FqBYUsvCEjYd70IXKlbohQ64mzEYmMtlWUY8q//Q==",
         "dependencies": {
           "undici-types": "undici-types@5.26.5"
         }
+      },
+      "@types/uuid@8.3.4": {
+        "integrity": "sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==",
+        "dependencies": {}
       },
       "@xenova/transformers@2.14.2": {
         "integrity": "sha512-R0MBCNgxsQ/LHfX2qQLjNGngPepohkjkyFn4axNe5Ui4L2KC8l/4AmJd4t9w8oeCbqAfZrxXXiFWpF5yXuCTxQ==",
@@ -206,6 +219,10 @@
           "color-convert": "color-convert@2.0.1",
           "color-string": "color-string@1.9.1"
         }
+      },
+      "crypto@1.0.1": {
+        "integrity": "sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==",
+        "dependencies": {}
       },
       "decompress-response@6.0.0": {
         "integrity": "sha512-aW35yZM6Bb/4oJlZncMH2LCoZtJXTRxES17vE3hoRiowU2kWHaJKFkSBDnDR+cm9J+9QhXmREyIfv0pji9ejCQ==",
@@ -333,6 +350,10 @@
       },
       "isexe@3.1.1": {
         "integrity": "sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==",
+        "dependencies": {}
+      },
+      "json-logic-js@2.0.2": {
+        "integrity": "sha512-ZBtBdMJieqQcH7IX/LaBsr5pX+Y5JIW+EhejtM3Ffg2jdN9Iwf+Ht6TbHnvAZ/YtwyuhPaCBlnvzrwVeWdvGDQ==",
         "dependencies": {}
       },
       "jsonwebtoken@9.0.2": {
@@ -810,6 +831,21 @@
         "integrity": "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==",
         "dependencies": {}
       },
+      "uuid@8.3.2": {
+        "integrity": "sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==",
+        "dependencies": {}
+      },
+      "uuid@9.0.1": {
+        "integrity": "sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==",
+        "dependencies": {}
+      },
+      "uuidv4@6.2.13": {
+        "integrity": "sha512-AXyzMjazYB3ovL3q051VLH06Ixj//Knx7QnUSi1T//Ie3io6CpsPu9nVMOx5MoLWh6xV0B9J0hIaxungxXUbPQ==",
+        "dependencies": {
+          "@types/uuid": "@types/uuid@8.3.4",
+          "uuid": "uuid@8.3.2"
+        }
+      },
       "which@4.0.0": {
         "integrity": "sha512-GlaYyEb07DPxYCKhKzplCWBJtvxZcZMrL+4UkrTSJHHPyZU4mYYTv3qaOe77H7EODLSSopAUFAc6W8U4yqvscg==",
         "dependencies": {
@@ -990,7 +1026,22 @@
     "https://deno.land/std@0.207.0/assert/mod.ts": "37c49a26aae2b254bbe25723434dc28cd7532e444cf0b481a97c045d110ec085",
     "https://deno.land/std@0.207.0/assert/unimplemented.ts": "d56fbeecb1f108331a380f72e3e010a1f161baa6956fd0f7cf3e095ae1a4c75a",
     "https://deno.land/std@0.207.0/assert/unreachable.ts": "4600dc0baf7d9c15a7f7d234f00c23bca8f3eba8b140286aaca7aa998cf9a536",
+    "https://deno.land/std@0.207.0/bytes/concat.ts": "d3d420badeb4f26a0f2f3ce343725f937326aff1b4634b25341b12b27353aac4",
+    "https://deno.land/std@0.207.0/crypto/_fnv/fnv32.ts": "e4649dfdefc5c987ed53c3c25db62db771a06d9d1b9c36d2b5cf0853b8e82153",
+    "https://deno.land/std@0.207.0/crypto/_fnv/fnv64.ts": "bfa0e4702061fdb490a14e6bf5f9168a22fb022b307c5723499469bfefca555e",
+    "https://deno.land/std@0.207.0/crypto/_fnv/mod.ts": "f956a95f58910f223e420340b7404702ecd429603acd4491fa77af84f746040c",
+    "https://deno.land/std@0.207.0/crypto/_fnv/util.ts": "accba12bfd80a352e32a872f87df2a195e75561f1b1304a4cb4f5a4648d288f9",
+    "https://deno.land/std@0.207.0/crypto/_wasm/lib/deno_std_wasm_crypto.generated.mjs": "6dd6f8d5061b7805579e954059a01aeec95636aac8fd408feb4352757cde71ae",
+    "https://deno.land/std@0.207.0/crypto/_wasm/mod.ts": "c4386f0ee80968faa82079cc21066aba2147bd6ca74ae45f1478fca7dbca804a",
+    "https://deno.land/std@0.207.0/crypto/crypto.ts": "a85295caff8b56ea43b91d57e92af89d6abf809a6eae5a25e18304bc0088b2aa",
     "https://deno.land/std@0.207.0/fmt/colors.ts": "34b3f77432925eb72cf0bfb351616949746768620b8e5ead66da532f93d10ba2",
+    "https://deno.land/std@0.207.0/uuid/_common.ts": "cb1441f4df460571fc0919e1c5c217f3e7006189b703caf946604b3f791ae34d",
+    "https://deno.land/std@0.207.0/uuid/constants.ts": "0d0e95561343da44adb4a4edbc1f04cef48b0d75288c4d1704f58743f4a50d88",
+    "https://deno.land/std@0.207.0/uuid/mod.ts": "5c7ca252dddba1ddf0bca2dc1124328245272650c98251d71996bb9cd8f5a386",
+    "https://deno.land/std@0.207.0/uuid/v1.ts": "fe36009afce7ced96e1b5928565e12c5a8eb0df1a2b5063c0a72bda6b75c0de5",
+    "https://deno.land/std@0.207.0/uuid/v3.ts": "397ad58daec8b5ef6ba7e94fe86c9bc56b194adcbe2f70ec40a1fb005203c870",
+    "https://deno.land/std@0.207.0/uuid/v4.ts": "0f081880c156fd59b9e44e2f84ea0f94a3627e89c224eaf6cc982b53d849f37e",
+    "https://deno.land/std@0.207.0/uuid/v5.ts": "9daaf769e487b512d25adf8e137e05ff2e3392d27f66d5b273ee28030ff7cd58",
     "https://deno.land/std@0.211.0/assert/assert.ts": "bec068b2fccdd434c138a555b19a2c2393b71dfaada02b7d568a01541e67cdc5",
     "https://deno.land/std@0.211.0/assert/assertion_error.ts": "9f689a101ee586c4ce92f52fa7ddd362e86434ffdf1f848e45987dc7689976b8",
     "https://deno.land/std@0.211.0/encoding/_util.ts": "beacef316c1255da9bc8e95afb1fa56ed69baef919c88dc06ae6cb7a6103d376",

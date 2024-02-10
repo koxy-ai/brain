@@ -10,6 +10,8 @@ import FlowMap from "../types/map.ts";
 import processResult from "./results/process.ts";
 import processSuccess from "./results/success.ts";
 import processFailure from "./results/fail.ts";
+import dynamicInputs from "./dynamic/inputs.ts";
+import type Types from "../types/types.ts";
 
 interface Result {
   status: number;
@@ -39,13 +41,16 @@ const map: FlowMap = {
         type: "string",
       },
       value: {
-        value: `{"date": "Koxy.env(VARIABLE)"}`,
-        type: "object",
+        value: "4",
+        type: "number",
+        operations: [
+          { op: "Math.random", mode: "replace" },
+        ],
       },
       mutable: {
         value: "true",
-        type: "boolean"
-      }
+        type: "boolean",
+      },
     },
     next: {
       success: "log1",
@@ -57,39 +62,8 @@ const map: FlowMap = {
     source: "general/logger",
     inputs: {
       value: {
-        value: "Hello from Koxy.var(obj)",
-        type: "string",
-      },
-    },
-    next: {
-      success: "log2",
-    },
-  },
-
-  log2: {
-    type: "block",
-    source: "general/logger",
-    inputs: {
-      value: {
-        value: "Hello from Koxy.env(VARIABLE)",
-        type: "string",
-      },
-    },
-    next: {
-      success: "addvar",
-    },
-  },
-
-  addvar: {
-    type: "block",
-    source: "general/addVariable",
-    inputs: {
-      key: {
-        value: "date",
-        type: "string",
-      },
-      value: {
-        value: `{"date": "Date.now()"}`,
+        value:
+          '{"a": {"b": {"c": ["$res[my result.0]", "$var[obj]", "$var[default.i]"] } } }',
         type: "object",
       },
     },
@@ -99,12 +73,25 @@ const map: FlowMap = {
 
 class Koxy {
   private map: FlowMap;
-  private env: Record<string, unknown> = { VARIABLE: "3" };
-  public variables = new Map<string, { value: unknown; mutable: boolean; type: string }>();
-  private startAt: number;
+  public env: Record<string, string> = { VARIABLE: "3" };
+  public variables = new Map<
+    string,
+    { value: unknown; mutable: boolean; type: Types }
+  >(
+    [
+      ["default", { value: { i: 55 }, mutable: true, type: "object" }],
+    ],
+  );
 
-  public results = new Map<string, unknown>();
+  private startAt: number;
+  public results = new Map<
+    string,
+    { success: boolean; value: unknown; type: Types }
+  >([
+    ["my result", { success: true, value: ["It's a result"], type: "array" }],
+  ]);
   private errors: { position: string; err: string }[] = [];
+  private warnings: { position: string; warning: string }[] = [];
 
   public prevPosition: string;
   public position: string;
@@ -122,7 +109,7 @@ class Koxy {
     this.map = map;
     this.position = "start";
     this.prevPosition = "start";
-    this.startAt = Date.now();
+    this.startAt = performance.now();
   }
 
   // start running the flow.
@@ -134,7 +121,7 @@ class Koxy {
       reason: this.stopReason,
       result: this.res,
       errors: this.errors,
-      took: Date.now() - this.startAt,
+      took: performance.now() - this.startAt,
     };
   }
 
@@ -163,7 +150,8 @@ class Koxy {
     }
 
     if (block.type === "pointer") {
-      return await this.process.pointer(block);
+      await this.process.pointer(block);
+      return;
     }
 
     if (block.type === "condition") {
@@ -174,8 +162,8 @@ class Koxy {
   }
 
   process = {
-    pointer: ({ target }: Pointer) => {
-      this.controller(target);
+    pointer: async ({ target }: Pointer) => {
+      await this.controller(target);
     },
 
     block: async (block: Block) => {
@@ -187,7 +175,8 @@ class Koxy {
       }
 
       this.next = next;
-      await action(this.inputs.process(inputs), this);
+      const inputsProcessed = await dynamicInputs(this, inputs);
+      await action(inputsProcessed, this);
     },
   };
 
@@ -202,62 +191,6 @@ class Koxy {
 
     return action;
   }
-
-  inputs = {
-    process: (inputs: Record<string, Record<string, unknown>>) => {
-      const processedInputs: Record<string, unknown> = {};
-
-      Object.keys(inputs).forEach((key) => {
-        const value = this.inputs.dynamic(inputs[key].value as string);
-        processedInputs[key] = value;
-      });
-
-      return processedInputs;
-    },
-
-    dynamic: (value: string) => {
-      if (typeof value !== "string") {
-        return value;
-      }
-
-      const envRegex = /Koxy\.env\(([^)]+)\)/g;
-      const varRegex = /Koxy\.var\(([^)]+)\)/g;
-
-      while (envRegex.test(value)) {
-        value = value.replace(envRegex, this.inputs.getEnv);
-      }
-
-      while (varRegex.test(value)) {
-        value = value.replace(varRegex, this.inputs.getVar);
-      }
-
-      return value;
-    },
-
-    getEnv: (_: string, key: string) => {
-      const value = this.env[key];
-      if (!value) {
-        this.throwError({ err: `Environment variable "${key}" not found` });
-        return "undefined";
-      }
-
-      return value as string;
-    },
-
-    getVar: (_: string, key: string) => {
-      const variable = this.variables.get(key);
-      if (!variable) {
-        this.throwError({ err: `Variable "${key}" not found` });
-        return "undefined";
-      }
-
-      if (typeof variable.value === "object") {
-        return JSON.stringify(variable.value);
-      }
-
-      return variable.value as string;
-    },
-  };
 
   throwError(
     { err, position, stop }: { err: string; position?: string; stop?: boolean },
@@ -274,12 +207,23 @@ class Koxy {
 
     return null;
   }
+
+  throwWarning({ warning, position }: { warning: string; position?: string }) {
+    this.warnings.push({
+      warning,
+      position: position || this.position,
+    });
+  }
 }
 
-const koxy = new Koxy(map);
-koxy.start().then((res) => {
-  console.log(res);
-})
+Deno.bench("Koxy", async () => {
+  const koxy = new Koxy(map);
+  const res = await koxy.start();
+});
+
+// const koxy = new Koxy(map);
+// const res = await koxy.start();
+// console.log(res);
 
 export { map, type Result };
 export default Koxy;

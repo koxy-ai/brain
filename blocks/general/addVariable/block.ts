@@ -1,10 +1,12 @@
 import Koxy from "../../../processor/main.ts";
 import ParamUiOptions from "../../../types/param-ui.ts";
+import Types from "../../../types/types.ts";
 
 type Params = {
   key: string;
   value: unknown;
   mutable: boolean;
+  type: Types;
 };
 
 const _name = "Add variable";
@@ -45,6 +47,7 @@ export default async function addVariable(
   window.variables.set(key, {
     value: value,
     mutable: mutable || false,
+    type: typeof value as Types,
   });
 
   await window.processResult(window, {

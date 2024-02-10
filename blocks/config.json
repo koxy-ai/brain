@@ -1,1 +1,120 @@
-[{"name":"Add variable","icon":"text","description":"Add a global variable","hasResult":false,"source":"general/addVariable","params":[{"name":"key","type":"string","ui":{"placeholder":"Enter variable key..."}},{"name":"value","type":"unknown","ui":{"placeholder":"Enter variable value..."}},{"name":"mutable","type":"boolean","ui":{"placeholder":"Can the variable value be mutated..?"}}]},{"name":"Parse JSON","icon":"code-dots","description":"Parse data to JSON","hasResult":true,"result":"\"object\"","source":"general/parseJSON","params":[{"name":"value","type":"unknown","ui":{"placeholder":"Enter value to parse..."}}]},{"name":"Logger","icon":"list","description":"Log something to the console","hasResult":false,"source":"general/logger","params":[{"name":"value","type":"unknown","ui":{"placeholder":"The value to log"}}]},{"name":"Text to array","icon":"brackets","description":"Make array from text","hasResult":true,"result":"\"array\"","source":"general/textToArray","params":[{"name":"value","type":"string","ui":{"placeholder":"Enter text to make array..."}},{"name":"splitOn","type":"string","ui":{"placeholder":"Enter delimiter..."}}]},{"name":"Array to text","icon":"list","description":"Join array to text","hasResult":true,"result":"\"string\"","source":"general/arrayToText","params":[{"name":"value","type":"string[] | number[]","ui":{"placeholder":"Enter array..."}},{"name":"joinOn","type":"string"}]},{"name":"Response status","icon":"text","description":"Change the response status code.","hasResult":false,"source":"general/responseStatus","params":[{"name":"code","type":"number","ui":{"type":"number","placeholder":"Enter status code..."}}]},{"name":"Stringify JSON","icon":"code-minus","description":"Stringify JSON to string","hasResult":true,"result":"\"string\"","source":"general/stringifyJSON","params":[{"name":"value","type":"object","ui":{"placeholder":"Enter value to Stringify..."}}]}]
+[
+  {
+    "name": "Add variable",
+    "icon": "text",
+    "description": "Add a global variable",
+    "hasResult": false,
+    "source": "general/addVariable",
+    "params": [
+      {
+        "name": "key",
+        "type": "string",
+        "ui": { "placeholder": "Enter variable key..." }
+      },
+      {
+        "name": "value",
+        "type": "unknown",
+        "ui": { "placeholder": "Enter variable value..." }
+      },
+      {
+        "name": "mutable",
+        "type": "boolean",
+        "ui": { "placeholder": "Can the variable value be mutated..?" }
+      }
+    ]
+  },
+  {
+    "name": "Array to text",
+    "icon": "list",
+    "description": "Join array to text",
+    "hasResult": true,
+    "result": "\"string\"",
+    "source": "general/arrayToText",
+    "params": [
+      {
+        "name": "value",
+        "type": "string[] | number[]",
+        "ui": { "placeholder": "Enter array..." }
+      },
+      { "name": "joinOn", "type": "string" }
+    ]
+  },
+  {
+    "name": "Logger",
+    "icon": "list",
+    "description": "Log something to the console",
+    "hasResult": false,
+    "source": "general/logger",
+    "params": [
+      {
+        "name": "value",
+        "type": "unknown",
+        "ui": { "placeholder": "The value to log" }
+      }
+    ]
+  },
+  {
+    "name": "Parse JSON",
+    "icon": "code-dots",
+    "description": "Parse data to JSON",
+    "hasResult": true,
+    "result": "\"object\"",
+    "source": "general/parseJSON",
+    "params": [
+      {
+        "name": "value",
+        "type": "unknown",
+        "ui": { "placeholder": "Enter value to parse..." }
+      }
+    ]
+  },
+  {
+    "name": "Response status",
+    "icon": "text",
+    "description": "Change the response status code.",
+    "hasResult": false,
+    "source": "general/responseStatus",
+    "params": [
+      {
+        "name": "code",
+        "type": "number",
+        "ui": { "type": "number", "placeholder": "Enter status code..." }
+      }
+    ]
+  },
+  {
+    "name": "Stringify JSON",
+    "icon": "code-minus",
+    "description": "Stringify JSON to string",
+    "hasResult": true,
+    "result": "\"string\"",
+    "source": "general/stringifyJSON",
+    "params": [
+      {
+        "name": "value",
+        "type": "object",
+        "ui": { "placeholder": "Enter value to Stringify..." }
+      }
+    ]
+  },
+  {
+    "name": "Text to array",
+    "icon": "brackets",
+    "description": "Make array from text",
+    "hasResult": true,
+    "result": "\"array\"",
+    "source": "general/textToArray",
+    "params": [
+      {
+        "name": "value",
+        "type": "string",
+        "ui": { "placeholder": "Enter text to make array..." }
+      },
+      {
+        "name": "splitOn",
+        "type": "string",
+        "ui": { "placeholder": "Enter delimiter..." }
+      }
+    ]
+  }
+]
