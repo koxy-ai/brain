@@ -5,7 +5,13 @@ interface Operation {
 }
 
 interface Block {
+  id: string;
+  name: string;
   type: "block";
+  position: {
+    x: number,
+    y: number
+  };
   source: string;
   inputs: Record<string, {
     value: string;
