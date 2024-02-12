@@ -1,9 +1,7 @@
-
 interface Input {
-    value: string;
-    type: string;
+  value: string;
+  type: string;
 }
 
 export default function dynamicInput() {
-    
 }

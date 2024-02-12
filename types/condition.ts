@@ -1,26 +1,26 @@
+import Block from "./block.ts";
+
 export type Operator = "=" | "!=" | "!" | "<" | ">" | "<=" | ">=";
 
 type MainCondition = {
   type: "main";
   operator: Operator;
-  operand1: unknown;
-  operand2: unknown;
+  operands: Block["inputs"];
 };
 
 type OtherCondition = {
   type: "other";
   logic: "and" | "or";
   operator: Operator;
-  operand1: unknown;
-  operand2: unknown;
+  operands: Block["inputs"];
 };
 
 interface Condition {
   type: "condition";
   main: MainCondition;
-  other: OtherCondition[] | undefined;
-  success: string;
-  failed: string;
+  other?: OtherCondition[] | undefined;
+  success?: string;
+  failed?: string;
 }
 
 export default Condition;

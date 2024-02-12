@@ -5,7 +5,7 @@ import dynamicType from "./dynamicType.ts";
 import jsonLogic from "npm:json-logic-js";
 import applyOperation from "./applyOperation.ts";
 
-export default async function dynamicInputs(
+export default function dynamicInputs(
   window: Koxy,
   inputs: Block["inputs"],
 ) {
@@ -15,12 +15,12 @@ export default async function dynamicInputs(
   for (const key of keys) {
     const input = inputs[key];
     const { value, type, operations } = input;
-    const typedValue = await dynamicType(key, value, type);
-    let realValue = await dynamicValue(window, typedValue, type);
+    const typedValue = dynamicType(key, value, type);
+    let realValue = dynamicValue(window, typedValue, type);
     for (const operation of operations ?? []) {
-      const newValue = await applyOperation(realValue, type, operation);
-      realValue = await dynamicType(key, newValue, type);
-      realValue = await dynamicValue(window, realValue, type);
+      const newValue = applyOperation(realValue, type, operation);
+      realValue = dynamicType(key, newValue, type);
+      realValue = dynamicValue(window, realValue, type);
     }
     (res as any)[key] = realValue;
   }

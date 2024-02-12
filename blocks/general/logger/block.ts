@@ -14,7 +14,7 @@ const _param_value_ui: ParamUiOptions = {
 };
 
 const log = (value: unknown) => {
-  // console.log(value, typeof value);
+  console.log(value, typeof value);
   return value;
 };
 

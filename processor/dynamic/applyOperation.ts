@@ -29,7 +29,10 @@ const modes: Record<string, ModeHandler> = {
   "subtract": (oldValue: any, newValue: any, type: Types) => {
     switch (type) {
       case "array":
-        oldValue = [...Array(oldValue) || [], (typeof newValue === "object") ? newValue : [newValue]];
+        oldValue = [
+          ...Array(oldValue) || [],
+          (typeof newValue === "object") ? newValue : [newValue],
+        ];
         return oldValue;
       default:
         return [oldValue, newValue];
@@ -95,12 +98,12 @@ export default function applyOperation(
 
   if (mode === "map") {
     switch (type) {
-        case "array":
-          currentValue = currentValue.map((item: any) => operation(op, item));
-          return currentValue;
-        default:
-          return currentValue;
-      }
+      case "array":
+        currentValue = currentValue.map((item: any) => operation(op, item));
+        return currentValue;
+      default:
+        return currentValue;
+    }
   }
 
   const modeHandler = modes[mode];
@@ -111,7 +114,7 @@ export default function applyOperation(
 
   try {
     return modeHandler(currentValue, newValue, type);
-  } catch(_e) {
+  } catch (_e) {
     return currentValue;
   }
 

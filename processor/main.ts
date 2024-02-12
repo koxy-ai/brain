@@ -5,6 +5,8 @@
 import Block from "../types/block.ts";
 import Pointer from "../types/pointer.ts";
 import Condition from "../types/condition.ts";
+import ConditionReturn from "../types/condition-return.ts";
+import condition from "./condition.ts";
 import general from "../blocks/general/index.ts";
 import FlowMap from "../types/map.ts";
 import processResult from "./results/process.ts";
@@ -43,9 +45,9 @@ const map: FlowMap = {
       value: {
         value: "4",
         type: "number",
-        operations: [
-          { op: "Math.random", mode: "replace" },
-        ],
+        // operations: [
+        //   { op: "Math.random", mode: "replace" },
+        // ],
       },
       mutable: {
         value: "true",
@@ -53,8 +55,44 @@ const map: FlowMap = {
       },
     },
     next: {
-      success: "log1",
+      success: "condition1",
     },
+  },
+
+  condition1: {
+    type: "condition",
+    main: {
+      type: "main",
+      operator: "=",
+      operands: {
+        operand1: {
+          value: "$var[obj]",
+          type: "number",
+        },
+        operand2: {
+          value: 4,
+          type: "number",
+        }
+      },
+    },
+    other: [
+      {
+        type: "other",
+        logic: "or",
+        operator: "=",
+        operands: {
+          operand1: {
+            value: "$var[obj]",
+            type: "string",
+          },
+          operand2: {
+            value: 5,
+            type: "number",
+          }
+        }
+      }
+    ],
+    success: "log1",
   },
 
   log1: {
@@ -150,11 +188,11 @@ class Koxy {
     }
 
     if (block.type === "pointer") {
-      await this.process.pointer(block);
-      return;
+      return await this.process.pointer(block);
     }
 
     if (block.type === "condition") {
+      await this.process.condition(block);
       return;
     }
 
@@ -175,9 +213,20 @@ class Koxy {
       }
 
       this.next = next;
-      const inputsProcessed = await dynamicInputs(this, inputs);
+      const inputsProcessed = dynamicInputs(this, inputs);
       await action(inputsProcessed, this);
     },
+
+    condition: async (cond: Condition) => {
+      const res = condition(this, cond);
+      if (res.state === "error") {
+        return this.throwError({ err: res.msg || "Condition error", stop: true });
+      }
+      if (res.target) {
+        return await this.controller(res.target);
+      }
+      this.stop();
+    }
   };
 
   // deno-lint-ignore ban-types
@@ -216,14 +265,14 @@ class Koxy {
   }
 }
 
-Deno.bench("Koxy", async () => {
-  const koxy = new Koxy(map);
-  const res = await koxy.start();
-});
+// Deno.bench("Koxy", async () => {
+//   const koxy = new Koxy(map);
+//   const res = await koxy.start();
+// });
 
-// const koxy = new Koxy(map);
-// const res = await koxy.start();
-// console.log(res);
+const koxy = new Koxy(map);
+const res = await koxy.start();
+console.log(res);
 
 export { map, type Result };
 export default Koxy;
